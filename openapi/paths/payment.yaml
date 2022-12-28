@@ -1,0 +1,48 @@
+get:
+  tags:
+    - Payment
+  summary: Make Payment Request
+  description: This endpoint retrieves all kittens.
+  operationId: payment
+  security:
+    - jwt: []
+  parameters: 
+    - name: hash
+      in: query
+      description: Convert request body to string(make sure all spaces remove from this string) and add hash salt end of the string.
+      required: true
+      example: 'XXXXXXXXXXXX'
+      schema:
+        type: string
+    - name: Authorization
+      in: header
+      description: JWT token for authorization
+      required: true
+      example: 'XXXXXXXXXXXXXXX'
+      schema:
+        type: string
+    - name: Content-Type
+      in: header
+      description: Request body type
+      required: true
+      example: 'application/json'
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/payment/payment-res.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+            $ref: ../components/schemas/payment/payment-req.yaml
+    required: true
+  x-codeSamples:
+    - lang: "Shell"
+      source:
+        $ref: "../code_samples/shell/payment.sh"
+

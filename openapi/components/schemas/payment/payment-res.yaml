@@ -1,0 +1,38 @@
+type: object
+properties:
+  status:
+    type: integer
+    description: 'Request status code'
+    example: 1000
+  message:
+    type: string
+    description: 'Request status message'
+    example: 'success'
+  data:
+    type: object
+    properties: 
+      ipg_transaction_id:
+        type: string
+        example: 'MCN11187B448EFF16CE73'
+      amount:
+        type: object
+        properties:
+          gross_amount:
+            type: number
+            example: 100.0
+          discount:
+            type: number
+            example: 0
+          handling_fee:
+            type: number
+            example: 0
+          net_amount:
+            type: number
+            example: 100.0
+      gateway: 
+        type: object
+        properties:
+          redirect_url:
+            type: string
+            example: 'https://exmple.onepay.lk/redirect/xxxxxxxxx'
+  

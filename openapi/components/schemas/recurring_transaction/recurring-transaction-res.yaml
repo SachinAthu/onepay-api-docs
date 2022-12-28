@@ -1,0 +1,55 @@
+type: object
+properties:
+  status:
+    type: integer
+    description: 'Request status code'
+    example: 1000
+  message:
+    type: string
+    description: 'Request status message'
+    example: 'success'
+  data:
+    type: object
+    properties: 
+      deal:
+        type: object
+        properties:
+          deal_reference:
+            type: string
+            example: '1187cad82cc00fd21'
+          deal_amount:
+            type: number
+            example: 1000
+          customer:
+            type: object
+            properties:
+              customer_email:
+                type: string
+                example: 'rishni.muthunayake@spemai.com'
+      gateway:
+        type: object
+        properties:
+          redirect_url:
+            type: string
+            example: '<GATEWAY LINK>'
+          amount:
+            type: object
+            properties:
+              gross_amount:
+                type: number
+                example: 1500.00
+              discount:
+                type: number
+                example: 0
+              handling_fee:
+                type: number
+                example: 0
+              net_amount:
+                type: number
+                example: 1500.00
+              currency:
+                type: string
+                example: 'LKR'
+          ipg_transaction_id:
+            type: string
+            example: 'KS911187CAD82CBFFC4D2'

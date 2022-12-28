@@ -1,0 +1,43 @@
+type: object
+required:
+  - amount
+  - app_id
+  - reference
+  - customer_first_name
+  - customer_last_name
+  - customer_phone_number
+  - customer_email
+  - transaction_redirect_url
+properties:
+  amount:
+    description: Transaction amount (only accept sri lankan rupees)
+    type: number
+    example: 1
+  app_id:
+    description: Please insert here App Id that you create in the merchant portal. App id you can simply generate via merchant portal
+    type: string
+    example: XXXXXX
+  reference:
+    description: Unique reference number for each transaction (Length must be within 10 - 20)
+    type: string
+    example: qwesaeds354ds
+  customer_first_name:
+    description: Customer first name that initiate transaction
+    type: string
+    example: Johe
+  customer_last_name:
+    description: Unique reference number for each transaction (Length must be within 10 - 20)
+    type: string
+    example: Doen
+  customer_phone_number:
+    description: 'Customer phone number with +94 that initiate transaction (ex: +947XXXXXXXX)'
+    type: string
+    example: '+947XXXXXXX'
+  customer_email:
+    description: 'Customer email that initiate transaction'
+    type: string
+    example: 'sample@.sample.com'
+  transaction_redirect_url:
+    description: 'URL to callback the status of the payment'
+    type: string
+    example: 'https://exmple.lk/respones'

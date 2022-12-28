@@ -1,0 +1,25 @@
+type: object
+properties:
+  status:
+    type: integer
+    description: 'Request status code'
+    example: 1000
+  message:
+    type: string
+    description: 'Request status message'
+    example: 'success'
+  data:
+    type: object
+    properties: 
+      transaction_id:
+        type: string
+        description: 'Onepay side transaction ID that received from API 1 (NOTE: Received when status success)'
+        example: 'YZL21187A866253D29B66'
+      status:
+        type: boolean
+        description: 'Transaction Status (NOTE: Received when status success)'
+        example: true
+      status_message:
+        type: string
+        description: 'Transaction Status description (NOTE: Received when status success)'
+        example: 'AMEX_SUCCESS'

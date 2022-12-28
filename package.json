@@ -2,12 +2,18 @@
   "name": "acme-api",
   "version": "1.0.0",
   "dependencies": {
-    "@redocly/cli": "1.0.0-beta.114"
+    "@redocly/cli": "1.0.0-beta.114",
+    "node-static": "^0.7.11"
   },
   "private": true,
   "scripts": {
     "start": "redocly preview-docs",
-    "build": "redocly bundle -o dist",
-    "test": "redocly lint"
+    "build": "redocly bundle -o ./public/dist.yaml",
+    "bundle": "npx redoc-cli bundle ./openapi/openapi.yaml",
+    "test": "redocly lint",
+    "serve": "node server"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

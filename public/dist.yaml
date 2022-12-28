@@ -1,0 +1,792 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Onepay.lk
+  termsOfService: https://example.com/terms/
+  contact:
+    email: info@onepay.lk
+    url: https://www.onepay.lk/contactus.html
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  x-logo:
+    url: https://onepayserviceimages.s3.ap-southeast-1.amazonaws.com/onepay_gateway_logo/1625655550.024874.png
+  description: |+
+    # Introduction
+
+    Welcome to the onepay IPG API! You can use our API to access onepay IPG API endpoints, which can do transaction on various paltforms.
+
+    This document presents version 1.0  release of onepay payment gateway transactions and portal integration APIs. To collect API keys please login to the onepay merchant portal sandbox section.
+
+    We have language binding in Shell! You can view code examples in the dark area to the right.
+
+    This example API documentation page was created with [onepay](https://www.onepay.lk). Feel free to edit it and use it as a base for your own API's documentation.
+
+
+    ##  Basics of calling APIs
+
+    **&lt;BASE URL&gt;/api/ipg/&lt;API VERSION&gt;/&lt;API ENDPOINT&gt;**
+
+    - BASE URL -  This URL provide by onepay service team separately
+    - API VERSION - API version that wish to call
+    - API ENDPOINT - API endpoint that mentioned with below APIs
+
+
+    ## Authentication
+
+    onepay IPG uses App token to allow access to the API. You can register a new App toke at our [developer portal](https://merchant-v2.onepay.lk).
+
+    onepay IPG expects for the App token to be included in all API requests to the server in a header that looks like the following:
+
+    <p style="width: max-content; background-color: #eee; padding: 2px 4px; border: none; border-radius: 2px;">Authorization: XXXXXXXXXXXX</p>
+
+    <p style="padding: 0.5rem 1em; background: #8fbcd4; line-height: 1.6; border: none; border-radius: 2px;">You must replace XXXXXXXXXXXX with your personal App Token.</p>
+
+
+    ## Error Codes
+
+    The onepay payment gateway API's uses the following error codes:
+
+    | Error Code  | Meaning                                             |
+    | :---        | :---                                                |
+    | 1000        | Success                                             |
+    | 1001        | Unauthorized                                        |
+    | 1002        | Invalid user credentials                            |
+    | 1003        | Please provide required data                        |
+    | 1004        | Transaction reference number length must be 10 - 20 |
+    | 1005        | Internal server error                               |
+    | 1006        | Merchant in invalid state                           |
+    | 1007        | Merchant not subscribe for this service             |
+    | 1014        | Invalid app configurations                          |
+    | 1015        | Duplicate transaction reference                     |
+    | 1016        | Invalid phone number                                |
+    | 1017        | Invalid email address                               |
+    | 1018        | Invalid URL                                         |
+    | 1019        | Transactions do not exist                           |
+
+
+tags:
+  - name: Payment
+    description: |-
+      <p style="padding: 0.5rem 1em; background: #8fbcd4; line-height: 1.6; border: none; border-radius: 2px;">
+        Convert that string to hash from sha256 You can use this online tool for testing 
+        <a href="https://emn178.github.io/online-tools/sha256.html" target="_blank">EMV sha256</a>
+      </p>
+
+      <p style="padding: 0.5rem 1em; background: #6ac174; line-height: 1.6; border: none; border-radius: 2px;">
+        Remember — a happy kitten is an authenticated kitten!
+      </p>
+  - name: IPG Integration APIs
+  - name: IPG Integration APIs 2
+servers:
+  - url: https://merchant-api-development.onepay.lk
+    description: Development server
+  - url: https://merchant-api-uat-v2.onepay.lk
+    description: UAT server
+  - url: https://merchant-api-live-v2.onepay.lk
+    description: Production server
+paths:
+  /api/ipg/gateway/request-transaction:
+    get:
+      tags:
+        - Payment
+      summary: Make Payment Request
+      description: This endpoint retrieves all kittens.
+      operationId: payment
+      security:
+        - jwt: []
+      parameters:
+        - name: hash
+          in: query
+          description: Convert request body to string(make sure all spaces remove from this string) and add hash salt end of the string.
+          required: true
+          example: XXXXXXXXXXXX
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: JWT token for authorization
+          required: true
+          example: XXXXXXXXXXXXXXX
+          schema:
+            type: string
+        - name: Content-Type
+          in: header
+          description: Request body type
+          required: true
+          example: application/json
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment-res'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment-req'
+        required: true
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request GET 'https://merchant-api-live-v2.onepay.lk/api/ipg/gateway/request-transaction/?hash=XXXXXXXXXXXX' \
+            --header 'Authorization: XXXXXXXXXXXXXXX' \
+            --header 'Content-Type: application/json' \
+  /api/ipg/single-transaction:
+    post:
+      tags:
+        - IPG Integration APIs
+      summary: Basic Transaction
+      description: |
+        NOTE - Hash key generation steps
+        1. Convert request body to string(make sure all spaces remove from this string) and add hash salt end of the string.<br>
+        <p>Ex: {"amount":100,"app_id":"0301de083fa28a45f988","reference":"123456kk56","customer_first_name":"chamath","customer_last_name":"rathnayake","customer_phone_number":"+94778869070","customer_email":"chamathrathnayake95@gmail.com","transaction_redirect_url":"https://developers.google.com/speed/pagespeed/insights/"}0302jh083fa28a88f7777</p>
+
+        2. <p>Convert that string to hash from sha256.</P>
+        <p>You can use this online tool for testing - <a href="https://emn178.github.io/online-tools/sha256.html" target="_blank">https://emn178.github.io/online-tools/sha256.html</a>.</p>
+
+        3. Attach generated hash key as URL param named "hash".
+      operationId: basicTransaction
+      security:
+        - jwt: []
+      parameters:
+        - name: hash
+          in: query
+          required: true
+          example: 075455d9cbe2d2d9c4aa73f7114369de7f3ff92376ed8f9d74ec8513328c5333
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Token generated from Gateway app creation
+          required: true
+          example: XXXXXXXXXXXXXXX
+          schema:
+            type: string
+        - name: Content-Type
+          in: header
+          description: Request body type
+          required: true
+          example: application/json
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/basic-transaction-req'
+        required: true
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request POST 'https://merchant-api-live-v2.onepay.lk/api/ipg/single-transaction/' \
+            --header 'Authorization: XXXXXXXXXXXXXXX' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+              "amount": 100.23,
+              "app_id": "0301de083fa28a45f988",
+              "reference": "45454545454995HH",
+              "customer_first_name": "Amila",
+              "customer_last_name": "Fernando",
+              "customer_phone_number": "+94777123456",
+              "customer_email": "test@mail.lk",
+              "transaction_redirect_url": "https://www.onepay.lk/",
+              "currency": "LKR"
+            }'
+  /api/ipg/recurring-transaction:
+    post:
+      tags:
+        - IPG Integration APIs
+      summary: Recurring Transaction
+      description: |-
+        NOTE - Hash key generation steps
+        1. Convert request body to string(make sure all spaces remove from this string) and add hash salt end of the string.<br>
+        <p>Ex: {"customer_email":"chamathrathnayake95@gmail.com","customer_phone_number":"+94778869070","reference":"123456kk56"}0302jh083fa28a88f7777</p>
+
+        2. <p>Convert that string to hash from sha256.</P>
+        <p>You can use this online tool for testing - <a href="https://emn178.github.io/online-tools/sha256.html" target="_blank">https://emn178.github.io/online-tools/sha256.html</a>.</p>
+
+        3. Attach generated hash key as URL param named "hash".
+      operationId: recurringTransaction
+      security:
+        - jwt: []
+      parameters:
+        - name: hash
+          in: query
+          required: true
+          example: 075455d9cbe2d2d9c4aa73f7114369de7f3ff92376ed8f9d74ec8513328c5333
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Token generated from Gateway app creation
+          required: true
+          example: XXXXXXXXXXXXXXX
+          schema:
+            type: string
+        - name: Content-Type
+          in: header
+          description: Request body type
+          required: true
+          example: application/json
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recurring-transaction-res'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recurring-transaction-req'
+        required: true
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request POST 'https://merchant-api-live-v2.onepay.lk/api/ipg/recurring-transaction/' \
+            --header 'Authorization: XXXXXXXXXXXXXXX' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+              "startup_fee": 100.23,
+              "app_id": "0301de083fa28a45f988",
+              "reference": "45454545454995HH",
+              "customer_first_name": "Amila",
+              "customer_last_name": "Fernando",
+              "customer_phone_number": "+94777123456",
+              "customer_email": "test@mail.lk",
+              "transaction_redirect_url": "https://www.onepay.lk/",
+              "transaction_callback_url": "https://webhook.site/47a2e4e0-5f48-49d8-9bd4-c25916573063https://webhook.site/47a2e4e0-5f48-49d8-9bd4-c25916573063",
+              "callback_authentication": "jkjksjksdj30299.321n2njjbjbbbbddfm.wjejkjj22nfn",
+              "currency": "LKR",
+              "rec_type": "CUSTOM",
+              "recurring_amount": 1000,
+              "cycles": 0,
+              "custom_period": 2,
+              "personal_verification_method": "NIC",
+              "personal_verification_number": 199502900420,
+              "permanent_address": "92, Bandaranayake Mawatha, katubedda, Moratuwa",
+              "correspondence_address": "92, Bandaranayake Mawatha, katubedda, Moratuwa",
+              "customer_secondory_mobile_number": "+94717169070"
+            }'
+  /api/ipg/gateway/request-transaction-status:
+    get:
+      tags:
+        - IPG Integration APIs
+      summary: Transaction Status Check
+      description: |-
+        NOTE - Hash key generation steps
+        1. Convert request body to string(make sure all spaces remove from this string).<br>
+        <p>Ex: {"onepay_transaction_id":"YZL21187A866253D29B66","app_id":"0301de083fa28a45f988"}</p>
+
+        2. <p>Convert that string to hash from sha256.</P>
+        <p>You can use this online tool for testing - <a href="https://emn178.github.io/online-tools/sha256.html" target="_blank">https://emn178.github.io/online-tools/sha256.html</a>.</p>
+
+        3. Attach generated hash key as URL param named "hash".
+      operationId: transactionStatusCheck
+      security:
+        - jwt: []
+      parameters:
+        - name: hash
+          in: query
+          required: true
+          example: 075455d9cbe2d2d9c4aa73f7114369de7f3ff92376ed8f9d74ec8513328c5333
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Token generated from Gateway app creation
+          required: true
+          example: XXXXXXXXXXXXXXX
+          schema:
+            type: string
+        - name: Content-Type
+          in: header
+          description: Request body type
+          required: true
+          example: application/json
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transaction-status-check-res'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transaction-status-check-req'
+        required: true
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request POST 'https://merchant-api-live-v2.onepay.lk/api/ipg/gateway/request-transaction-status/' \
+            --header 'Authorization: XXXXXXXXXXXXXXX' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+              "app_id": "0301de083fa28a45f988",
+              "onepay_transaction_id": "YZL21187A866253D29B66"
+            }'
+  /api/user/ipg/auth:
+    post:
+      tags:
+        - IPG Integration APIs 2
+      summary: Authentication
+      operationId: authentication
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authentication-req'
+        required: true
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request POST 'https://merchant-api-live-v2.onepay.lk/api/user/ipg/auth/' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+              "email": "user1@gmail.com",
+              "password": "pwd111@",
+            }'
+  /api/ipg/gateway/customers:
+    get:
+      tags:
+        - IPG Integration APIs 2
+      summary: Get customer list
+      operationId: getCustomerList
+      security:
+        - jwt: []
+      parameters:
+        - name: Authentication
+          in: header
+          required: true
+          example: Bearer <token>
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: true
+          example: 1
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: true
+          example: 10
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request GET 'https://merchant-api-live-v2.onepay.lk/api/ipg/gateway/customers/?page=1&limit=10' \
+            --header 'Authentication: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+  /api/ipg/gateway/deals:
+    get:
+      tags:
+        - IPG Integration APIs 2
+      summary: Get customer deals
+      operationId: getCustomerDeals
+      security:
+        - jwt: []
+      parameters:
+        - name: Authentication
+          in: header
+          required: true
+          example: Bearer <token>
+          schema:
+            type: string
+        - name: ipg_customer_id
+          in: query
+          required: true
+          example: gff45455555
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: true
+          example: 1
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: true
+          example: 10
+          schema:
+            type: integer
+      x-codeSamples:
+        - lang: Shell
+          source: |-
+            curl --location --request GET 'https://merchant-api-live-v2.onepay.lk/api/ipg/gateway/deals/?ipg_customer_id=gff45455555&page=1&limit=10' \
+            --header 'Authentication: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+components:
+  securitySchemes:
+    main_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://example.com/api/oauth/dialog
+          scopes:
+            read:users: read users info
+            write:users: modify or remove users
+    api_key:
+      type: apiKey
+      in: header
+      name: api_key
+    basic_auth:
+      type: http
+      scheme: basic
+    jwt:
+      description: Generated JWT when you log in.
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    payment-req:
+      type: object
+      required:
+        - amount
+        - app_id
+        - reference
+        - customer_first_name
+        - customer_last_name
+        - customer_phone_number
+        - customer_email
+        - transaction_redirect_url
+      properties:
+        amount:
+          description: Transaction amount (only accept sri lankan rupees)
+          type: number
+          example: 1
+        app_id:
+          description: Please insert here App Id that you create in the merchant portal. App id you can simply generate via merchant portal
+          type: string
+          example: XXXXXX
+        reference:
+          description: Unique reference number for each transaction (Length must be within 10 - 20)
+          type: string
+          example: qwesaeds354ds
+        customer_first_name:
+          description: Customer first name that initiate transaction
+          type: string
+          example: Johe
+        customer_last_name:
+          description: Unique reference number for each transaction (Length must be within 10 - 20)
+          type: string
+          example: Doen
+        customer_phone_number:
+          description: 'Customer phone number with +94 that initiate transaction (ex: +947XXXXXXXX)'
+          type: string
+          example: +947XXXXXXX
+        customer_email:
+          description: Customer email that initiate transaction
+          type: string
+          example: sample@.sample.com
+        transaction_redirect_url:
+          description: URL to callback the status of the payment
+          type: string
+          example: https://exmple.lk/respones
+    payment-res:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Request status code
+          example: 1000
+        message:
+          type: string
+          description: Request status message
+          example: success
+        data:
+          type: object
+          properties:
+            ipg_transaction_id:
+              type: string
+              example: MCN11187B448EFF16CE73
+            amount:
+              type: object
+              properties:
+                gross_amount:
+                  type: number
+                  example: 100
+                discount:
+                  type: number
+                  example: 0
+                handling_fee:
+                  type: number
+                  example: 0
+                net_amount:
+                  type: number
+                  example: 100
+            gateway:
+              type: object
+              properties:
+                redirect_url:
+                  type: string
+                  example: https://exmple.onepay.lk/redirect/xxxxxxxxx
+    basic-transaction-req:
+      type: object
+      required:
+        - amount
+        - app_id
+        - reference
+        - customer_first_name
+        - customer_last_name
+        - customer_phone_number
+        - customer_email
+        - transaction_redirect_url
+        - currency
+      properties:
+        amount:
+          description: Amount of the transaction
+          type: number
+          example: 100.23
+        app_id:
+          description: APPID generate from IPG App creation
+          type: string
+          example: 0301de083fa28a45f988
+        reference:
+          description: Merchant Transaction ID (NOTE- length must be within 10 - 20 characters)
+          type: string
+          example: 45454545454995HH
+        customer_first_name:
+          description: Customer’s first name that doing transaction
+          type: string
+          example: Amila
+        customer_last_name:
+          description: Customer’s last name that doing transaction
+          type: string
+          example: Fernando
+        customer_phone_number:
+          description: Customer’s mobile number
+          type: string
+          example: '+94777123456'
+        customer_email:
+          description: Customer’s Email
+          type: string
+          example: test@mail.lk
+        transaction_redirect_url:
+          description: URL that needs to be redirected after transaction completed.
+          type: string
+          example: https://www.onepay.lk/
+        currency:
+          description: Value must be LKR or USD
+          type: string
+          example: LKR
+    recurring-transaction-req:
+      type: object
+      required:
+        - startup_fee
+        - app_id
+        - reference
+        - customer_first_name
+        - customer_last_name
+        - customer_phone_number
+        - customer_email
+        - transaction_redirect_url
+        - transaction_callback_url
+        - callback_authentication
+        - currency
+        - rec_type
+        - recurring_amount
+        - cycles
+      properties:
+        startup_fee:
+          description: Initial setup fee of the transaction
+          type: number
+          example: 100.23
+        app_id:
+          description: APPID generate from IPG App creation
+          type: string
+          example: 0301de083fa28a45f988
+        reference:
+          description: Merchant Transaction ID (NOTE- length must be within 10 - 20 characters)
+          type: string
+          example: 45454545454995HH
+        customer_first_name:
+          description: Customer’s first name that doing transaction
+          type: string
+          example: Amila
+        customer_last_name:
+          description: Customer’s last name that doing transaction
+          type: string
+          example: Fernando
+        customer_phone_number:
+          description: Customer’s mobile number
+          type: string
+          example: '+94777123456'
+        customer_email:
+          description: Customer’s Email
+          type: string
+          example: test@mail.lk
+        transaction_redirect_url:
+          description: URL that needs to be redirected after transaction completed.
+          type: string
+          example: https://www.onepay.lk/
+        transaction_callback_url:
+          description: Custom callback URL to get transaction status.
+          type: string
+          example: https://webhook.site/47a2e4e0-5f48-49d8-9bd4-c25916573063https://webhook.site/47a2e4e0-5f48-49d8-9bd4-c25916573063
+        callback_authentication:
+          description: Callback webhook’s authentication method.
+          type: string
+          example: jkjksjksdj30299.321n2njjbjbbbbddfm.wjejkjj22nfn
+        currency:
+          description: Value must be LKR or USD
+          type: string
+          example: LKR
+        rec_type:
+          description: Recurring period ('DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'ANNUALLY', 'CUSTOM')
+          type: string
+          example: CUSTOM
+        recurring_amount:
+          description: Recurring transaction amount
+          type: string
+          example: 1000
+        cycles:
+          description: Recurring cycles
+          type: string
+          example: 0
+        custom_period:
+          description: If custom recurring period in days (Required if rec_type = "CUSTOM").
+          type: string
+          example: 2
+        personal_verification_method:
+          description: Customer verification method. Value must be 'NIC', 'DRIVING_LICENSE' or 'PASSPORT'
+          type: string
+          example: NIC
+        personal_verification_number:
+          description: 'Verification number (ex: NIC number, passport number)'
+          type: string
+          example: 199502900420
+        permanent_address:
+          description: Customer's permanent address
+          type: string
+          example: 92, Bandaranayake Mawatha, katubedda, Moratuwa
+        correspondence_address:
+          description: Customer's correspondence address
+          type: string
+          example: 92, Bandaranayake Mawatha, katubedda, Moratuwa
+        customer_secondory_mobile_number:
+          description: Customer's secondary mobile number
+          type: string
+          example: '+94717169070'
+    recurring-transaction-res:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Request status code
+          example: 1000
+        message:
+          type: string
+          description: Request status message
+          example: success
+        data:
+          type: object
+          properties:
+            deal:
+              type: object
+              properties:
+                deal_reference:
+                  type: string
+                  example: 1187cad82cc00fd21
+                deal_amount:
+                  type: number
+                  example: 1000
+                customer:
+                  type: object
+                  properties:
+                    customer_email:
+                      type: string
+                      example: rishni.muthunayake@spemai.com
+            gateway:
+              type: object
+              properties:
+                redirect_url:
+                  type: string
+                  example: <GATEWAY LINK>
+                amount:
+                  type: object
+                  properties:
+                    gross_amount:
+                      type: number
+                      example: 1500
+                    discount:
+                      type: number
+                      example: 0
+                    handling_fee:
+                      type: number
+                      example: 0
+                    net_amount:
+                      type: number
+                      example: 1500
+                    currency:
+                      type: string
+                      example: LKR
+                ipg_transaction_id:
+                  type: string
+                  example: KS911187CAD82CBFFC4D2
+    transaction-status-check-req:
+      type: object
+      required:
+        - app_id
+        - onepay_transaction_id
+      properties:
+        app_id:
+          description: APPID generate from IPG App creation
+          type: string
+          example: 0301de083fa28a45f988
+        onepay_transaction_id:
+          description: Onepay Transaction ID
+          type: string
+          example: YZL21187A866253D29B66
+    transaction-status-check-res:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Request status code
+          example: 1000
+        message:
+          type: string
+          description: Request status message
+          example: success
+        data:
+          type: object
+          properties:
+            transaction_id:
+              type: string
+              description: 'Onepay side transaction ID that received from API 1 (NOTE: Received when status success)'
+              example: YZL21187A866253D29B66
+            status:
+              type: boolean
+              description: 'Transaction Status (NOTE: Received when status success)'
+              example: true
+            status_message:
+              type: string
+              description: 'Transaction Status description (NOTE: Received when status success)'
+              example: AMEX_SUCCESS
+    authentication-req:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: user1@gmail.com
+        password:
+          type: string
+          example: pwd111@

@@ -1,0 +1,97 @@
+type: object
+required:
+  - startup_fee
+  - app_id
+  - reference
+  - customer_first_name
+  - customer_last_name
+  - customer_phone_number
+  - customer_email
+  - transaction_redirect_url
+  - transaction_callback_url
+  - callback_authentication
+  - currency
+  - rec_type
+  - recurring_amount
+  - cycles
+properties:
+  startup_fee:
+    description: Initial setup fee of the transaction
+    type: number
+    example: 100.23
+  app_id:
+    description: APPID generate from IPG App creation
+    type: string
+    example: 0301de083fa28a45f988
+  reference:
+    description: Merchant Transaction ID (NOTE- length must be within 10 - 20 characters)
+    type: string
+    example: 45454545454995HH
+  customer_first_name:
+    description: Customer’s first name that doing transaction
+    type: string
+    example: Amila
+  customer_last_name:
+    description: Customer’s last name that doing transaction
+    type: string
+    example: Fernando
+  customer_phone_number:
+    description: 'Customer’s mobile number'
+    type: string
+    example: '+94777123456'
+  customer_email:
+    description: 'Customer’s Email'
+    type: string
+    example: 'test@mail.lk'
+  transaction_redirect_url:
+    description: 'URL that needs to be redirected after transaction completed.'
+    type: string
+    example: 'https://www.onepay.lk/'
+  transaction_callback_url:
+    description: 'Custom callback URL to get transaction status.'
+    type: string
+    example: 'https://webhook.site/47a2e4e0-5f48-49d8-9bd4-c25916573063https://webhook.site/47a2e4e0-5f48-49d8-9bd4-c25916573063'
+  callback_authentication:
+    description: 'Callback webhook’s authentication method.'
+    type: string
+    example: 'jkjksjksdj30299.321n2njjbjbbbbddfm.wjejkjj22nfn'
+  currency:
+    description: 'Value must be LKR or USD'
+    type: string
+    example: 'LKR'
+  rec_type:
+    description: Recurring period ('DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'ANNUALLY', 'CUSTOM')
+    type: string
+    example: 'CUSTOM'
+  recurring_amount:
+    description: 'Recurring transaction amount'
+    type: string
+    example: 1000
+  cycles:
+    description: 'Recurring cycles'
+    type: string
+    example: 0
+  custom_period:
+    description: 'If custom recurring period in days (Required if rec_type = "CUSTOM").'
+    type: string
+    example: 2
+  personal_verification_method:
+    description: Customer verification method. Value must be 'NIC', 'DRIVING_LICENSE' or 'PASSPORT'
+    type: string
+    example: 'NIC'
+  personal_verification_number:
+    description: 'Verification number (ex: NIC number, passport number)'
+    type: string
+    example: 199502900420
+  permanent_address:
+    description: Customer's permanent address
+    type: string
+    example: '92, Bandaranayake Mawatha, katubedda, Moratuwa'
+  correspondence_address:
+    description: Customer's correspondence address
+    type: string
+    example: '92, Bandaranayake Mawatha, katubedda, Moratuwa'
+  customer_secondory_mobile_number:
+    description: Customer's secondary mobile number
+    type: string
+    example: '+94717169070'

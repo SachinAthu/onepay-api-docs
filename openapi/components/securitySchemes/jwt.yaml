@@ -1,0 +1,4 @@
+description: Generated JWT when you log in.
+type: http
+scheme: bearer
+bearerFormat: JWT

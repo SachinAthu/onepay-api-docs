@@ -1,0 +1,48 @@
+type: object
+required:
+  - amount
+  - app_id
+  - reference
+  - customer_first_name
+  - customer_last_name
+  - customer_phone_number
+  - customer_email
+  - transaction_redirect_url
+  - currency
+properties:
+  amount:
+    description: Amount of the transaction
+    type: number
+    example: 100.23
+  app_id:
+    description: APPID generate from IPG App creation
+    type: string
+    example: 0301de083fa28a45f988
+  reference:
+    description: Merchant Transaction ID (NOTE- length must be within 10 - 20 characters)
+    type: string
+    example: 45454545454995HH
+  customer_first_name:
+    description: Customer’s first name that doing transaction
+    type: string
+    example: Amila
+  customer_last_name:
+    description: Customer’s last name that doing transaction
+    type: string
+    example: Fernando
+  customer_phone_number:
+    description: 'Customer’s mobile number'
+    type: string
+    example: '+94777123456'
+  customer_email:
+    description: 'Customer’s Email'
+    type: string
+    example: 'test@mail.lk'
+  transaction_redirect_url:
+    description: 'URL that needs to be redirected after transaction completed.'
+    type: string
+    example: 'https://www.onepay.lk/'
+  currency:
+    description: 'Value must be LKR or USD'
+    type: string
+    example: 'LKR'

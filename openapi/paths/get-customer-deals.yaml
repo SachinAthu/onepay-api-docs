@@ -1,0 +1,37 @@
+get:
+  tags:
+    - Recurring Transactions
+  summary: Get customer deals
+  operationId: getCustomerDeals
+  security:
+    - jwt: []
+  parameters: 
+    - name: Authentication
+      in: header
+      required: true
+      example: 'Bearer <token>'
+      schema:
+        type: string
+    - name: ipg_customer_id
+      in: query
+      required: true
+      example: 'gff45455555'
+      schema:
+        type: string
+    - name: page
+      in: query
+      required: true
+      example: 1
+      schema:
+        type: integer
+    - name: limit
+      in: query
+      required: true
+      example: 10
+      schema:
+        type: integer
+  x-codeSamples:
+  - lang: "Shell"
+    source:
+      $ref: "../code_samples/shell/get-customer-deals.sh"
+

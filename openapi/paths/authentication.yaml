@@ -1,0 +1,18 @@
+post:
+  tags:
+    - Recurring Transactions
+  summary: Authentication
+  operationId: authentication
+  security:
+    - jwt: []
+  requestBody:
+    content:
+      application/json:
+        schema:
+            $ref: ../components/schemas/authentication-req.yaml
+    required: true
+  x-codeSamples:
+  - lang: "Shell"
+    source:
+      $ref: "../code_samples/shell/authentication.sh"
+

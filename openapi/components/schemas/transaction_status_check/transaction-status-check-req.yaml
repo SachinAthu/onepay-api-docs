@@ -1,0 +1,13 @@
+type: object
+required:
+  - app_id
+  - onepay_transaction_id
+properties:
+  app_id:
+    description: APPID generate from IPG App creation
+    type: string
+    example: 0301de083fa28a45f988
+  onepay_transaction_id:
+    description: Onepay Transaction ID
+    type: string
+    example: YZL21187A866253D29B66

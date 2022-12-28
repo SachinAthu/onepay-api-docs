@@ -1,0 +1,2 @@
+curl --location --request GET 'https://merchant-api-live-v2.onepay.lk/api/ipg/gateway/deals/?ipg_customer_id=gff45455555&page=1&limit=10' \
+--header 'Authentication: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
