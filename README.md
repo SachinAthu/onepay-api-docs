@@ -256,3 +256,8 @@ Automated code sample generations is enabled in the Redocly configuration file. 
 You can add languages by adding new folders at the appropriate path level.
 
 More details inside the `code_samples` folder README.
+
+### Get Compiled Output - HTML
+
+#### `npx redoc-cli bundle openapi.yaml`
+This will generate a single html file called redoc-static.html, which is a static, fully-functional version of the documentation.
